@@ -11,3 +11,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: INFO
+    com:
+      zaxxer:
+        hikari: INFO

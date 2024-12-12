@@ -2,6 +2,7 @@ package com.bd.example.domain.services;
 
 import com.bd.example.domain.Product;
 import com.bd.example.domain.ports.repositories.ProductRepository;
+import com.bd.example.domain.services.transactionControl.CustomTransactional;
 
 public class UpdateProductService {
     private final ProductRepository repository;
@@ -10,6 +11,7 @@ public class UpdateProductService {
         this.repository = repository;
     }
 
+    @CustomTransactional
     public Product execute(final Product product) {
         final var existing = repository.findById(product.getId())
                 .orElseThrow(() -> new RuntimeException("Product %d not find".formatted(product.getId())));
