@@ -5,12 +5,12 @@ import com.bd.example.domain.ports.repositories.InventoryHistoryRepository;
 import com.bd.example.domain.ports.repositories.ProductRepository;
 import com.bd.example.domain.services.transactionControl.CustomTransactional;
 
-public class RecordInventoryMovement {
+public class RecordInventoryService {
 
     private final InventoryHistoryRepository inventoryHistoryRepository;
     private final ProductRepository productRepository;
 
-    public RecordInventoryMovement(
+    public RecordInventoryService(
             final InventoryHistoryRepository inventoryHistoryRepository,
             final ProductRepository productRepository) {
         this.inventoryHistoryRepository = inventoryHistoryRepository;

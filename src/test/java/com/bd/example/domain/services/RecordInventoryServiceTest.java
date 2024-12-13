@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RecordInventoryMovementTest {
+public class RecordInventoryServiceTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -58,7 +58,7 @@ public class RecordInventoryMovementTest {
                 .thenReturn(inventoryHistorySaved);
 
         assertDoesNotThrow(() -> {
-            final var result = new RecordInventoryMovement(inventoryHistoryRepository, productRepository).execute(productId, quantity);
+            final var result = new RecordInventoryService(inventoryHistoryRepository, productRepository).execute(productId, quantity);
             verify(productRepository, times(1)).findById(productId);
             verify(productRepository, times(1)).save(productChanged);
             verify(inventoryHistoryRepository, times(1)).save(inventoryHistory);

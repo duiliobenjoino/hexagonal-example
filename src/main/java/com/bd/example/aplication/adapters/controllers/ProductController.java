@@ -4,8 +4,9 @@ import com.bd.example.aplication.adapters.dtos.InventoryRequestDTO;
 import com.bd.example.aplication.adapters.dtos.InventoryResponseDTO;
 import com.bd.example.aplication.adapters.dtos.ProductDTO;
 import com.bd.example.domain.services.CreateProductService;
+import com.bd.example.domain.services.FindInventoryService;
 import com.bd.example.domain.services.FindProductService;
-import com.bd.example.domain.services.RecordInventoryMovement;
+import com.bd.example.domain.services.RecordInventoryService;
 import com.bd.example.domain.services.RemoveProductService;
 import com.bd.example.domain.services.UpdateProductService;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,7 +34,8 @@ public class ProductController {
     private final UpdateProductService updateService;
     private final RemoveProductService removeService;
     private final FindProductService findService;
-    private final RecordInventoryMovement inventoryService;
+    private final RecordInventoryService recordInventoryService;
+    private final FindInventoryService findInventoryService;
 
     @GetMapping
     public ResponseEntity<List<ProductDTO>> find(
@@ -72,13 +75,22 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/inventory")
-    public ResponseEntity<InventoryResponseDTO> inventory(
+    @GetMapping("/{id}/inventory")
+    public ResponseEntity<List<InventoryResponseDTO>> findInventory(
+            @PathVariable final Integer id, @RequestParam(required = false) final LocalDate createdFrom) {
+        final var dto = this.findInventoryService.findBy(id, createdFrom)
+                .stream().map(InventoryResponseDTO::fromDomain)
+                .toList();
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("/{id}/inventory/record")
+    public ResponseEntity<InventoryResponseDTO> recordMovement(
             @RequestBody @Valid final InventoryRequestDTO dto,
             @PathVariable final Integer id) {
-        final var inventoryHistory = this.inventoryService.execute(id, dto.getQuantity());
+        final var inventoryHistory = this.recordInventoryService.execute(id, dto.getQuantity());
         return ResponseEntity
-                .ok()
+                .status(HttpStatus.CREATED)
                 .body(InventoryResponseDTO.fromDomain(inventoryHistory));
     }
 }

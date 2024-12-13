@@ -6,7 +6,6 @@ import com.bd.example.domain.services.transactionControl.CustomTransactional;
 public class RemoveProductService {
     private final ProductRepository repository;
 
-
     public RemoveProductService(final ProductRepository repository) {
         this.repository = repository;
     }
@@ -17,5 +16,4 @@ public class RemoveProductService {
                 .orElseThrow(() -> new RuntimeException("Product %d not find".formatted(id)));
         repository.remove(id);
     }
-
 }

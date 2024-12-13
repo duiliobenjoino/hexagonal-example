@@ -6,6 +6,9 @@ import com.bd.example.infra.adapters.entities.InventoryHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class InventoryHistoryRepositoryImp implements InventoryHistoryRepository {
@@ -17,4 +20,12 @@ public class InventoryHistoryRepositoryImp implements InventoryHistoryRepository
         final var entity = repository.save(new InventoryHistoryEntity(inventoryHistory));
         return entity.toDomain();
     }
+
+    @Override
+    public List<InventoryHistory> findBy(final Integer productId, final ZonedDateTime createdFrom) {
+        return repository.findByProductIdAndCreatedAtGreaterThanEqual(productId, createdFrom)
+                .stream().map(InventoryHistoryEntity::toDomain)
+                .toList();
+    }
+
 }
